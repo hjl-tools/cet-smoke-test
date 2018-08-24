@@ -1,2 +1,3 @@
-# cet-smoke-test
-Intel Control-flow Enforcement Technology (CET) Smoke test
+# Intel Control-flow Enforcement Technology (CET) Smoke Test
+
+1. kernel: Tests for CET kernel.
