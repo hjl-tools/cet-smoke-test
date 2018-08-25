@@ -1,16 +1,16 @@
 include ../../cet.make
 
 CC=gcc
-CFLAGS=-g -O2 -Wa,-mx86-used-note=no
-ASFLAGS=-g -Wa,-mx86-used-note=no
+CFLAGS=-g -O2
+ASFLAGS=-g
 LD=ld
-LDFLAGS=
+LDFLAGS=-T note.t
 
 EXES=ibt1 ibt2 ibt3 shstk1 shstk2 shstk3
 
 OBJS=start.o syscall.o
 
-all: $(EXES)
+all: note.t $(EXES)
 	./ibt1
 	./shstk1
 ifeq (yes,$(CET-ENABLED))
@@ -45,5 +45,14 @@ shstk3: $(OBJS) foo.o shstk.o note3.o
 
 note1.o note2.o note3.o: note.S
 
+note.t:
+	$(LD) --verbose | \
+	  sed > $@T \
+	      -e '/^=========/,/^=========/!d;/^=========/d' \
+	      -e 's@^.*\*(\.jcr).*$$@& \
+		 /DISCARD/ : { *(.note.gnu.property) }@'
+	test -s $@T
+	mv -f $@T $@
+
 clean:
-	rm -f $(OBJS) $(EXES) *.o
+	rm -f $(OBJS) $(EXES) *.o note.t
