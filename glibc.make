@@ -41,7 +41,7 @@ define build-static
 $(CC) -static -nostdlib -nostartfiles -o $@ \
 $(GLIBC-BUILD-DIR)/csu/crt1.o $(GLIBC-BUILD-DIR)/csu/crti.o \
 `$(CC) --print-file-name=crtbegin.o` \
-$^ \
+$($(@F)-LDFLAGS) $^ \
 -Wl,--start-group \
 $(LIBM-STATIC) \
 $(LIBGCC-EH-STATIC) \
@@ -56,20 +56,20 @@ $(CC) -Busr/local/bin/ -nostdlib -nostartfiles -o $@ \
 -Wl,-dynamic-linker=$(LD-SO) -Wl,-z,nocombreloc \
 $(GLIBC-BUILD-DIR)/csu/crt1.o $(GLIBC-BUILD-DIR)/csu/crti.o \
 `$(CC) --print-file-name=crtbegin.o` -Wl,$(RPATH-LINK)=$(GLIBC-PATH) \
-$^ \
+$($(@F)-LDFLAGS) $^ \
 $(LIBM-DYNAMIC) $(LIBPTHREAD-DYNAMIC) $(GLIBC-BUILD-DIR)/libc.so.6 \
 $(LD-SO) $(GLIBC-BUILD-DIR)/libc_nonshared.a $(LIBGCC-EH-DYNAMIC) \
 `$(CC) --print-file-name=crtend.o` $(GLIBC-BUILD-DIR)/csu/crtn.o
 endef
 else
 define build-static
-$(CC) -static -o $@ $^
+$(CC) -static -o $@ $^ $($(@F)-LDFLAGS)
 endef
 
 define build-dynamic
-$(CC) -o $@ $^
+$(CC) -o $@ $^ $($(@F)-LDFLAGS)
 endef
 endif
 
-clean:
+clean::
 	rm -f *.o $(EXES)
