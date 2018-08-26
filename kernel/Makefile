@@ -1,4 +1,4 @@
-include cet.make
+include ../cet.make
 
 all .DEFAULT:
 ifeq (yes,$(CET-ENABLED))
