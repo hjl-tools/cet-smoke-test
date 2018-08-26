@@ -57,7 +57,7 @@
 	.long 0xc0000002	/* pr_type.  */
 	.long 5f - 4f		/* pr_datasz.  */
 4:
-	.long 0x3
+	.long 0x80000003
 5:
 #ifdef __LP64__
 	.p2align 3
