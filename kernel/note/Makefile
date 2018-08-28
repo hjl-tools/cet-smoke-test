@@ -6,13 +6,15 @@ ASFLAGS=-g
 LD=ld
 LDFLAGS=-T note.t
 
-EXES=ibt1 ibt2 ibt3 ibt4 shstk1 shstk2 shstk3 shstk4
+EXES=ibt1 ibt2 ibt3 ibt4 ibt5 shstk1 shstk2 shstk3 shstk4 shstk5
 
 OBJS=start.o syscall.o
 
 all: note.t $(EXES)
 	./ibt1
 	./shstk1
+	./ibt5
+	./shstk5
 ifeq (yes,$(CET-ENABLED))
 	if ./ibt2; then exit 1; fi
 	if ./ibt3; then exit 1; fi
@@ -41,6 +43,9 @@ ibt3: $(OBJS) ibt.o note3.o
 ibt4: $(OBJS) ibt.o note4.o
 	$(LD) $(LDFLAGS) -o $@ $^
 
+ibt5: $(OBJS) ibt.o note5.o
+	$(LD) $(LDFLAGS) -o $@ $^
+
 shstk1: $(OBJS) foo.o shstk.o note1.o
 	$(LD) $(LDFLAGS) -o $@ $^
 
@@ -51,6 +56,9 @@ shstk3: $(OBJS) foo.o shstk.o note3.o
 	$(LD) $(LDFLAGS) -o $@ $^
 
 shstk4: $(OBJS) foo.o shstk.o note4.o
+	$(LD) $(LDFLAGS) -o $@ $^
+
+shstk5: $(OBJS) foo.o shstk.o note5.o
 	$(LD) $(LDFLAGS) -o $@ $^
 
 note1.o note2.o note3.o: note.S
