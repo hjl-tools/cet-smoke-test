@@ -1,5 +1,5 @@
 -include config.make
-include ../cet.make
+include ../sde.config
 
 CC=gcc
 CFLAGS=-g -O2
@@ -35,25 +35,16 @@ shstk5-LDFLAGS=$(LDFLAGS)
 ibt.o: CFLAGS +=-fcf-protection=branch
 
 all: note.t $(EXES)
-	./ibt1
-	./shstk1
-	./ibt5
-	./shstk5
-ifeq (yes,$(CET-ENABLED))
-	if ./ibt2; then exit 1; fi
-	if ./ibt3; then exit 1; fi
-	if ./ibt4; then exit 1; fi
-	if ./shstk2; then exit 1; fi
-	if ./shstk3; then exit 1; fi
-	if ./shstk4; then exit 1; fi
-else
-	./ibt2
-	./ibt3
-	./ibt4
-	./shstk2
-	./shstk3
-	./shstk4
-endif
+	$(RUN) ./ibt1
+	$(RUN) ./shstk1
+	$(RUN) ./ibt5
+	$(RUN) ./shstk5
+	if $(RUN) ./ibt2; then exit 1; fi
+	if $(RUN) ./ibt3; then exit 1; fi
+	if $(RUN) ./ibt4; then exit 1; fi
+	if $(RUN) ./shstk2; then exit 1; fi
+	if $(RUN) ./shstk3; then exit 1; fi
+	if $(RUN) ./shstk4; then exit 1; fi
 
 include ../glibc.make
 

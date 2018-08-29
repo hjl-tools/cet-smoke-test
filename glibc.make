@@ -1,5 +1,8 @@
 ARCH?=$(shell uname -m)
 
+SDE=$(SDE-DIR)/sde
+RUN=$(SDE) --
+
 ifneq (,$(GLIBC-SOURCE-DIR)$(GLIBC-BUILD-DIR))
 
 ifeq (x86_64,$(ARCH))
