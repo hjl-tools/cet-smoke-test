@@ -1,5 +1,23 @@
-quick_test: quick_test.c
-	gcc -fcf-protection $< -o $@
+-include config.make
+include ../cet.make
 
-clean:
-	rm -f quick_test
+CC=gcc
+CFLAGS=-g -fcf-protection
+
+EXES=quick_test
+
+quick_test-OBJS=quick_test.o
+
+all: $(EXES)
+	for f in $(EXES); do \
+	  status=; \
+	  readelf -n $$f | grep -q "IBT, SHSTK" && ./$$f && status=OK; \
+	  if [ x$$status != xOK ]; then \
+	    echo $$f: Failed; exit 1; \
+	  fi; \
+	done
+
+include ../glibc.make
+
+quick_test: $(quick_test-OBJS)
+	$(build-dynamic)

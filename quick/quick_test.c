@@ -100,9 +100,14 @@ int main(int argc, char *argv[])
 	else if (test_id == 3)
 		raise(SIGUSR2);
 
+	r = 0;
 	printf("SHSTK: %s\n", result[0] ? "FAIL":"OK");
+	r += result[0];
 	printf("IBT:   %s\n", result[1] ? "FAIL":"OK");
+	r += result[1];
 	printf("SHSTK in signal: %s\n", result[2] ? "FAIL":"OK");
+	r += result[2];
 	printf("IBT in signal:   %s\n", result[3] ? "FAIL":"OK");
-	return 0;
+	r += result[3];
+	return r;
 }
