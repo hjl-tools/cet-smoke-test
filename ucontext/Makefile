@@ -12,7 +12,7 @@ all: $(EXES)
 	for f in $(EXES); do \
 	  status=; \
 	  readelf -n $$f | grep -q "IBT, SHSTK" && ./$$f && status=OK; \
-	  if [ $$status != OK ]; then \
+	  if [ x$$status != xOK ]; then \
 	    echo $$f: Failed; exit 1; \
 	  fi; \
 	done
