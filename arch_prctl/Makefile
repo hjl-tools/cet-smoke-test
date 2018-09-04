@@ -6,7 +6,7 @@ ASFLAGS=-g
 LD=ld
 LDFLAGS=-T note.t
 
-EXES=status
+EXES=status shstk_alloc
 
 OBJS=start.o syscall.o
 
@@ -23,6 +23,9 @@ all: note.t $(EXES)
 include ../glibc.make
 
 status: $(OBJS) status.o note.o
+	$(LD) $(LDFLAGS) -o $@ $^
+
+shstk_alloc: $(OBJS) shstk_alloc.o note.o
 	$(LD) $(LDFLAGS) -o $@ $^
 
 note.t:
