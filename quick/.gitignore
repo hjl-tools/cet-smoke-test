@@ -2,3 +2,4 @@ quick_test
 mprotect_bench
 fork_bench
 shstk_alloc
+shstk_ptrace
