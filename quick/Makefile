@@ -4,9 +4,10 @@ include ../cet.make
 CC=gcc
 CFLAGS=-g -fcf-protection
 
-EXES=quick_test shstk_alloc
+EXES=quick_test mprotect_bench shstk_alloc
 
 quick_test-OBJS=quick_test.o
+mprotect_bench-OBJS=mprotect_bench.o
 shstk_alloc-OBJS=shstk_alloc.o
 
 all: $(EXES)
@@ -21,6 +22,9 @@ all: $(EXES)
 include ../glibc.make
 
 quick_test: $(quick_test-OBJS)
+	$(build-dynamic)
+
+mprotect_bench: $(mprotect_bench-OBJS)
 	$(build-dynamic)
 
 shstk_alloc: $(shstk_alloc-OBJS)
