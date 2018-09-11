@@ -3,6 +3,7 @@
 #include <sys/mman.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <errno.h>
 
 #define PAGE_SIZE 0x1000
 
@@ -28,8 +29,10 @@ int main(int argc, char *argv[])
 			exit(0);
 
 		if (pid < 0) {
-			printf("fork() %d failed!\n", i);
-			return -1;
+			printf("fork() %d failed: %m!\n", i);
+			if (i < 10000 || errno != EAGAIN)
+				return -1;
+			break;
 		}
 	}
 
