@@ -35,9 +35,9 @@ main ()
 
   ret = syscall (SYS_arch_prctl, ARCH_CET_STATUS, cet_status);
   if (ret != 0)
-    error ("arch_prctl (ARCH_CET_STATUS)");
+    error ("arch_prctl (ARCH_CET_STATUS) failed");
   if ((cet_status[0] & 0x3) != 0x3)
-    error ("ARCH_CET_STATUS");
+    error ("ARCH_CET_STATUS failed");
   syscall (SYS_exit, 0);
   return 0;
 }
