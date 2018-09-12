@@ -4,3 +4,4 @@ fork_bench
 shstk_alloc
 shstk_ptrace
 shstk_thp
+shstk_dirty_cow

@@ -5,7 +5,7 @@ CC=gcc
 CFLAGS=-g -fcf-protection
 
 EXES=quick_test mprotect_bench fork_bench shstk_alloc shstk_ptrace \
-     shstk_thp
+     shstk_thp shstk_dirty_cow
 
 quick_test-OBJS=quick_test.o
 mprotect_bench-OBJS=mprotect_bench.o
@@ -13,6 +13,9 @@ fork_bench-OBJS=fork_bench.o
 shstk_alloc-OBJS=shstk_alloc.o
 shstk_ptrace-OBJS=shstk_ptrace.o
 shstk_thp-OBJS=shstk_thp.o
+shstk_dirty_cow-OBJS=shstk_dirty_cow.o
+
+shstk_dirty_cow-LIBS=-lpthread
 
 all: $(EXES)
 	for f in $(EXES); do \
@@ -41,4 +44,7 @@ shstk_ptrace: $(shstk_ptrace-OBJS)
 	$(build-dynamic)
 
 shstk_thp: $(shstk_thp-OBJS)
+	$(build-dynamic)
+
+shstk_dirty_cow: $(shstk_dirty_cow-OBJS)
 	$(build-dynamic)
