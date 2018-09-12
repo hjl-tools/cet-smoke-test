@@ -1,7 +1,7 @@
 ARCH?=$(shell uname -m)
 
 SDE=$(SDE-DIR)/sde
-RUN=$(SDE) --
+RUN?=$(SDE) --
 
 ifneq (,$(GLIBC-SOURCE-DIR)$(GLIBC-BUILD-DIR))
 
