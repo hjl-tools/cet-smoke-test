@@ -14,16 +14,14 @@ endif
 
 GLIBC-PATH=$(GLIBC-BUILD-DIR):.
 
-ifeq (yes,$(NEED-LIBM))
-GLIBC-PATH:=$(GLIBC-PATH):$(GLIBC-BUILD-DIR)/math
+LIBM-GLIBC-PATH=:$(GLIBC-BUILD-DIR)/math
 LIBM-STATIC=$(GLIBC-BUILD-DIR)/math/libm.a
 LIBM-DYNAMIC=$(GLIBC-BUILD-DIR)/math/libm.so
-endif
 
-ifeq (yes,$(NEED-LIBPTHREAD))
-GLIBC-PATH:=$(GLIBC-PATH):$(GLIBC-BUILD-DIR)/nptl
+LIBPTHREAD-GLIBC-PATH=:$(GLIBC-BUILD-DIR)/nptl
 LIBPTHREAD-STATIC=$(GLIBC-BUILD-DIR)/nptl/libpthread.a
 LIBPTHREAD-DYNAMIC=$(GLIBC-BUILD-DIR)/nptl/libpthread.so
+ifneq ($(wildcard $(GLIBC-BUILD-DIR)/nptl/libpthread_nonshared.a),)
 LIBPTHREAD-DYNAMIC+=$(GLIBC-BUILD-DIR)/nptl/libpthread_nonshared.a
 endif
 
@@ -41,9 +39,10 @@ define build-static
 $(CC) -static -nostdlib -nostartfiles -o $@ \
 $(GLIBC-BUILD-DIR)/csu/crt1.o $(GLIBC-BUILD-DIR)/csu/crti.o \
 `$(CC) --print-file-name=crtbegin.o` \
-$($(@F)-LDFLAGS) $^ \
+$($(@F)-LDFLAGS) $^
+$(if $(findstring -lm,$($(@F)-LIBS)),$(LIBM-STATIC)) \
+$(if $(findstring -lpthread,$($(@F)-LIBS)),$(LIBPTHREAD-STATIC)) \
 -Wl,--start-group \
-$(LIBM-STATIC) \
 $(LIBGCC-EH-STATIC) \
 $(GLIBC-BUILD-DIR)/libc.a  \
 -Wl,--end-group \
@@ -55,19 +54,22 @@ define build-dynamic
 $(CC) -Busr/local/bin/ -nostdlib -nostartfiles -o $@ \
 -Wl,-dynamic-linker=$(LD-SO) -Wl,-z,nocombreloc \
 $(GLIBC-BUILD-DIR)/csu/crt1.o $(GLIBC-BUILD-DIR)/csu/crti.o \
-`$(CC) --print-file-name=crtbegin.o` -Wl,$(RPATH-LINK)=$(GLIBC-PATH) \
+`$(CC) --print-file-name=crtbegin.o` \
+-Wl,$(RPATH-LINK)=$(GLIBC-PATH)$(if $(findstring -lpthread,$($(@F)-LIBS)),$(LIBPTHREAD-GLIBC-PATH))$(if $(findstring -lm,$($(@F)-LIBS)),$(LIBM-GLIBC-PATH)) \
 $($(@F)-LDFLAGS) $^ \
-$(LIBM-DYNAMIC) $(LIBPTHREAD-DYNAMIC) $(GLIBC-BUILD-DIR)/libc.so.6 \
+$(if $(findstring -lm,$($(@F)-LIBS)),$(LIBM-DYNAMIC)) \
+$(if $(findstring -lpthread,$($(@F)-LIBS)),$(LIBPTHREAD-DYNAMIC)) \
+$(GLIBC-BUILD-DIR)/libc.so.6 \
 $(LD-SO) $(GLIBC-BUILD-DIR)/libc_nonshared.a $(LIBGCC-EH-DYNAMIC) \
 `$(CC) --print-file-name=crtend.o` $(GLIBC-BUILD-DIR)/csu/crtn.o
 endef
 else
 define build-static
-$(CC) -static -o $@ $^ $($(@F)-LDFLAGS)
+$(CC) -static $($(@F)-LDFLAGS) -o $@ $^ $($(@F)-LIBS)
 endef
 
 define build-dynamic
-$(CC) -o $@ $^ $($(@F)-LDFLAGS)
+$(CC) $($(@F)-LDFLAGS) -o $@ $^ $($(@F)-LIBS)
 endef
 endif
 
