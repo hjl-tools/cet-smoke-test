@@ -42,3 +42,8 @@ Loaded symbols for /lib64/ld-linux-x86-64.so.2
 0x00007fae0fc07100 in _start ()
    from /lib64/ld-linux-x86-64.so.2
 (gdb)
+
+1. To run CET smoke test for x86-64, create an empty cet.config file.
+2. To run CET smoke test for x32, create cet.config file with
+
+TARGET=x32

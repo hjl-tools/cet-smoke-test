@@ -1,7 +1,9 @@
+TOP-DIR=..
 -include config.make
-include ../sde.config
 
-CC=gcc
+include $(TOP-DIR)/sde.config
+include $(TOP-DIR)/cet.make
+
 CFLAGS=-g -O2
 ASFLAGS=-g
 LDFLAGS=-Wl,-T,note.t
@@ -46,7 +48,7 @@ all: note.t $(EXES)
 	if $(RUN) ./shstk3; then exit 1; fi
 	if $(RUN) ./shstk4; then exit 1; fi
 
-include ../glibc.make
+include $(TOP-DIR)/glibc.make
 
 note1.o note2.o note3.o: note.S
 

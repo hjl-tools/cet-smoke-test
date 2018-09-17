@@ -1,12 +1,10 @@
-ARCH?=$(shell uname -m)
-
 SDE=$(SDE-DIR)/sde
 RUN?=$(SDE) --
 
 ifneq (,$(GLIBC-SOURCE-DIR)$(GLIBC-BUILD-DIR))
 
 ifeq (x86_64,$(ARCH))
-ifneq ($(findstring mx32,$(CC)),)
+ifeq (x32,$(TARGET))
 LD-SO=$(GLIBC-BUILD-DIR)/elf/ld-linux-x32.so.2
 else
 LD-SO=$(GLIBC-BUILD-DIR)/elf/ld-linux-x86-64.so.2

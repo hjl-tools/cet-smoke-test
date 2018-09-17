@@ -1,4 +1,6 @@
-include ../cet.make
+TOP-DIR=..
+
+include $(TOP-DIR)/cet.make
 
 all .DEFAULT:
 ifeq (yes,$(CET-ENABLED))

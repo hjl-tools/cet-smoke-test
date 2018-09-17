@@ -1,9 +1,10 @@
-include ../sde.config
+TOP-DIR=..
 
-CC=gcc
+include $(TOP-DIR)/sde.config
+include $(TOP-DIR)/cet.make
+
 CFLAGS=-g -O2
 ASFLAGS=-g
-LD=ld
 LDFLAGS=-T note.t
 
 EXES=status shstk_alloc
