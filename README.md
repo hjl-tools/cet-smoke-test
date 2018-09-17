@@ -12,3 +12,8 @@ $ make clean
 To run all tests:
 
 $ make
+
+1. To run CET smoke test for x86-64, create an empty cet.config file.
+2. To run CET smoke test for x32, create cet.config file with
+
+TARGET=x32

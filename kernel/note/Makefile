@@ -1,9 +1,9 @@
-include ../../cet.make
+TOP-DIR=../..
 
-CC=gcc
+include $(TOP-DIR)/cet.make
+
 CFLAGS=-g -O2
 ASFLAGS=-g
-LD=ld
 LDFLAGS=-T note.t
 
 EXES=ibt1 ibt2 ibt3 ibt4 ibt5 shstk1 shstk2 shstk3 shstk4 shstk5

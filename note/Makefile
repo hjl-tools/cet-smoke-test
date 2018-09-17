@@ -1,7 +1,8 @@
+TOP-DIR=..
 -include config.make
-include ../cet.make
 
-CC=gcc
+include $(TOP-DIR)/cet.make
+
 CFLAGS=-g -O2
 ASFLAGS=-g
 LDFLAGS=-Wl,-T,note.t
@@ -55,7 +56,7 @@ else
 	./shstk4
 endif
 
-include ../glibc.make
+include $(TOP-DIR)/glibc.make
 
 note1.o note2.o note3.o: note.S
 

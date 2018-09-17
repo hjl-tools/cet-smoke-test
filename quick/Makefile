@@ -1,7 +1,9 @@
--include config.make
-include ../cet.make
+TOP-DIR=..
 
-CC=gcc
+-include config.make
+
+include $(TOP-DIR)/cet.make
+
 CFLAGS=-g -fcf-protection
 
 EXES=quick_test mprotect_bench fork_bench shstk_alloc shstk_ptrace \
@@ -26,7 +28,7 @@ all: $(EXES)
 	  fi; \
 	done
 
-include ../glibc.make
+include $(TOP-DIR)/glibc.make
 
 quick_test: $(quick_test-OBJS)
 	$(build-dynamic)

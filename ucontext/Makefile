@@ -1,7 +1,9 @@
--include config.make
-include ../cet.make
+TOP-DIR=..
 
-CC=gcc
+-include config.make
+
+include $(TOP-DIR)/cet.make
+
 CFLAGS=-g -O2 -fcf-protection
 
 EXES=ucontext-1
@@ -17,7 +19,7 @@ all: $(EXES)
 	  fi; \
 	done
 
-include ../glibc.make
+include $(TOP-DIR)/glibc.make
 
 ucontext-1: $(ucontext-1-OBJS)
 	$(build-dynamic)
