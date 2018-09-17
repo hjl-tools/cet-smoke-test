@@ -3,7 +3,7 @@ TOP-DIR=..
 include $(TOP-DIR)/sde.config
 include $(TOP-DIR)/cet.make
 
-CFLAGS=-g -O2
+CFLAGS=-g -O2 -mshstk
 ASFLAGS=-g
 LDFLAGS=-T note.t
 

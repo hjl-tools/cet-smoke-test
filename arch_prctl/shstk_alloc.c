@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <syscall.h>
 #include <asm/prctl.h>
+#include <x86intrin.h>
 
 #ifndef ARCH_CET_STATUS
 # define ARCH_CET_ALLOC_SHSTK	0x3004
@@ -30,7 +31,7 @@ int main(int argc, char *argv[])
 	unsigned long ssp_x;
 	unsigned long ssp_y;
 
-	asm volatile("RDSSPQ %0\n": "=r" (ssp_x));
+	ssp_x = _get_ssp();
 
 	arg = 0x1000;
 	err = syscall(SYS_arch_prctl, ARCH_CET_ALLOC_SHSTK, &arg);
@@ -45,13 +46,13 @@ int main(int argc, char *argv[])
 	asm volatile("RSTORSSP (%0)\n":: "r" (ssp_y));
 	asm volatile("SAVEPREVSSP");
 
-	asm volatile("RDSSPQ %0\n": "=r" (ssp_y));
+	ssp_y = _get_ssp();
 
 	ssp_x -= 8;
 	asm volatile("RSTORSSP (%0)\n":: "r" (ssp_x));
 	asm volatile("SAVEPREVSSP");
 
-	asm volatile("RDSSPQ %0\n": "=r" (ssp_x));
+	ssp_x = _get_ssp();
 
 	msg ("ARCH_CET_ALLOC_SHSTK is OK!\n");
 	syscall (SYS_exit, 0);
