@@ -30,8 +30,15 @@ void ibt_violation(void)
 
 void shstk_violation(void)
 {
+#ifdef __i386__
 	unsigned long x[1];
+
 	x[2] = (unsigned long)stack_hacked;
+#else
+	unsigned long long x[1];
+
+	x[2] = (unsigned long long)(unsigned long)stack_hacked;
+#endif
 }
 
 void segv_handler(int signum, siginfo_t *si, void *uc)
