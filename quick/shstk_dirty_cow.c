@@ -12,8 +12,9 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <x86intrin.h>
 
-#define TEST_PATTERN 0xa5a5a5a5a5a5a5a5UL
+#define TEST_PATTERN 0xa5a5a5a5a5a5a5a5ULL
 
 void *shstk_buf;
  
@@ -31,7 +32,7 @@ void *t2(void *arg)
 {
 	int f = open("/proc/self/mem", O_RDWR);
 	int i, c = 0;
-	unsigned long fill = TEST_PATTERN;
+	unsigned long long fill = TEST_PATTERN;
 
 	for (i = 0; i < 1000000; i++) {
 		lseek(f, (uintptr_t)shstk_buf, SEEK_SET);
@@ -61,8 +62,8 @@ int main(int argc, char *argv[])
 	 * Use the shadow stack page below the
 	 * current one; we don't want a #CP.
 	 */
-	asm volatile("rdsspq %0\n": "=r" (shstk));
-	shstk = shstk & 0xfffffffffffff000;
+	shstk = _get_ssp ();
+	shstk = shstk & (unsigned long) -0x1000;
 	shstk -= 0x1000;
 	shstk_buf = (void *)shstk;
 

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <asm/prctl.h>
 #include <sys/prctl.h>
+#include <x86intrin.h>
 
 int arch_prctl(int code, unsigned long *addr);
 
@@ -14,7 +15,7 @@ int main(int argc, char *argv[])
 	unsigned long ssp_x;
 	unsigned long ssp_y;
 
-	asm volatile("RDSSPQ %0\n": "=r" (ssp_x));
+	ssp_x = _get_ssp ();
 	printf("ssp_x = %016lx\n", ssp_x);
 
 	arg = 0x1000;
@@ -34,14 +35,14 @@ int main(int argc, char *argv[])
 	asm volatile("RSTORSSP (%0)\n":: "r" (ssp_y));
 	asm volatile("SAVEPREVSSP");
 
-	asm volatile("RDSSPQ %0\n": "=r" (ssp_y));
+	ssp_y = _get_ssp ();
 	printf("confirm ssp_y = %016lx\n", ssp_y);
 
 	ssp_x -= 8;
 	asm volatile("RSTORSSP (%0)\n":: "r" (ssp_x));
 	asm volatile("SAVEPREVSSP");
 
-	asm volatile("RDSSPQ %0\n": "=r" (ssp_x));
+	ssp_x = _get_ssp ();
 	printf("confirm ssp_x = %016lx\n", ssp_x);
 
 	printf("done!\n");

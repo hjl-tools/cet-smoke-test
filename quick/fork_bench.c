@@ -6,6 +6,7 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 #include <errno.h>
+#include <x86intrin.h>
 
 #define PAGE_SIZE 0x1000
 
@@ -24,7 +25,7 @@ int main(int argc, char *argv[])
 
 	ssp_len = rlim.rlim_cur;
 
-	asm volatile("RDSSPQ %0\n": "=r" (ssp));
+	ssp = _get_ssp ();
 	printf("ssp = %012lx\n", ssp);
 	ssp |= (PAGE_SIZE - 1);
 	ssp -= (ssp_len - 1);

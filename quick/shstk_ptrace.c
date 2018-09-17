@@ -6,16 +6,17 @@
 #include <sys/ptrace.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <x86intrin.h>
 
-#define TEST_PATTERN 0xa5a5a5a5a5a5a5a5UL
+#define TEST_PATTERN 0xa5a5a5a5a5a5a5a5ULL
 
 void *get_last_shstk_page(void)
 {
 	void *shstk_page;
 
-	asm volatile("rdsspq %0\n": "=r" (shstk_page));
+	shstk_page = (void *)(unsigned long) _get_ssp ();
 	shstk_page = (void *)((unsigned long)shstk_page &
-			0xfffffffffffff000);
+			(unsigned long) -0x1000);
 	return shstk_page;
 }
 
@@ -33,7 +34,7 @@ int main(int argc, char *argv[])
 //		printf("child: shstk page = %p\n", shstk_page);
 //		printf("child: *shstk_page=%016lx\n",
 //		       *(unsigned long *)shstk_page);
-		if (*(unsigned long *)shstk_page == TEST_PATTERN)
+		if (*(unsigned long long *)shstk_page == TEST_PATTERN)
 			printf("OK\n");
 		else
 			printf("FAIL\n");

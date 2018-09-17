@@ -4,7 +4,7 @@ TOP-DIR=..
 
 include $(TOP-DIR)/cet.make
 
-CFLAGS=-g -fcf-protection
+CFLAGS=-g -fcf-protection -mshstk
 
 EXES=quick_test mprotect_bench fork_bench shstk_alloc shstk_ptrace \
      shstk_thp shstk_dirty_cow
