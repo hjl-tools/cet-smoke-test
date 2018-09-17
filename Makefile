@@ -1,6 +1,6 @@
 all .DEFAULT:
 	for d in *; do \
-	  if [ -d $$d ]; then \
+	  if [ -e $$d/Makefile ]; then \
 	    status=; \
 	    make -C $$d $@ && status=OK; \
 	    if [ x$$status != xOK ]; then \

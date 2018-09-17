@@ -5,7 +5,7 @@ include $(TOP-DIR)/cet.make
 all .DEFAULT:
 ifeq (yes,$(CET-ENABLED))
 	for d in *; do \
-	  if [ -d $$d ]; then \
+	  if [ -e $$d/Makefile ]; then \
 	    make -C $$d $@; \
 	  fi; \
 	done
