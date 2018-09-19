@@ -52,7 +52,7 @@ void call_to_self2(int total)
 
 int main(int argc, char *argv[])
 {
-	unsigned long stat[3];
+	unsigned long long stat[3];
 	pid_t child;
 	int r;
 
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 	}
 
 	printf("self pid = %d, shstk_base = %016lx, size = %016lx\n",
-	       getpid(), stat[1], stat[2]);
+	       getpid(), (long) stat[1], (long) stat[2]);
 
 	if (stat[2] < 0x300000) {
 		printf("Shadow stack must be larger then 3 MB\n");
