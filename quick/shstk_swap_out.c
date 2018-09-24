@@ -5,7 +5,11 @@
 #include <unistd.h>
 
 #define SIZE_1_GB 0x40000000
+#ifdef __LP64__
 #define TOTAL_GBS 20
+#else
+#define TOTAL_GBS 3
+#endif
 
 void *buf[TOTAL_GBS];
 
@@ -60,7 +64,7 @@ int main(int argc, char *argv[])
 		}
 		buf[i] = p;
 		memset(p, 0xa5, SIZE_1_GB);
-		printf("Used %d GB memory\n", i);
+		printf("Used %d GB memory\n", i + 1);
 	}
 
 	printf("OK\n");
