@@ -12,6 +12,10 @@ endif
 
 GLIBC-PATH=$(GLIBC-BUILD-DIR):.
 
+LIBDL-GLIBC-PATH=:$(GLIBC-BUILD-DIR)/dlfcn
+LIBDL-STATIC=$(GLIBC-BUILD-DIR)/dlfcn/libdl.a
+LIBDL-DYNAMIC=$(GLIBC-BUILD-DIR)/dlfcn/libdl.so
+
 LIBM-GLIBC-PATH=:$(GLIBC-BUILD-DIR)/math
 LIBM-STATIC=$(GLIBC-BUILD-DIR)/math/libm.a
 LIBM-DYNAMIC=$(GLIBC-BUILD-DIR)/math/libm.so
@@ -53,8 +57,9 @@ $(CC) -Busr/local/bin/ -nostdlib -nostartfiles -o $@ \
 -Wl,-dynamic-linker=$(LD-SO) -Wl,-z,nocombreloc \
 $(GLIBC-BUILD-DIR)/csu/crt1.o $(GLIBC-BUILD-DIR)/csu/crti.o \
 `$(CC) --print-file-name=crtbegin.o` \
--Wl,$(RPATH-LINK)=$(GLIBC-PATH)$(if $(findstring -lpthread,$($(@F)-LIBS)),$(LIBPTHREAD-GLIBC-PATH))$(if $(findstring -lm,$($(@F)-LIBS)),$(LIBM-GLIBC-PATH)) \
+-Wl,$(RPATH-LINK)=$(GLIBC-PATH)$(if $(findstring -lpthread,$($(@F)-LIBS)),$(LIBPTHREAD-GLIBC-PATH))$(if $(findstring -lm,$($(@F)-LIBS)),$(LIBM-GLIBC-PATH))$(if $(findstring -ldl,$($(@F)-LIBS)),$(LIBDL-GLIBC-PATH)) \
 $($(@F)-LDFLAGS) $^ \
+$(if $(findstring -ldl,$($(@F)-LIBS)),$(LIBDL-DYNAMIC)) \
 $(if $(findstring -lm,$($(@F)-LIBS)),$(LIBM-DYNAMIC)) \
 $(if $(findstring -lpthread,$($(@F)-LIBS)),$(LIBPTHREAD-DYNAMIC)) \
 $(GLIBC-BUILD-DIR)/libc.so.6 \
