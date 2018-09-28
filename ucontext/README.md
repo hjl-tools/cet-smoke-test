@@ -1,4 +1,4 @@
-# Tests for glibc CET note parser.
+# Tests for glibc CET ucontext.
 
 To test newly built glibc, create config.make:
 
