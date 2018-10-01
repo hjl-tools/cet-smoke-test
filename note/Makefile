@@ -7,7 +7,8 @@ CFLAGS=-g -O2
 ASFLAGS=-g
 LDFLAGS=-Wl,-T,note.t
 
-EXES=ibt1 ibt2 ibt3 ibt4 ibt5 shstk1 shstk2 shstk3 shstk4 shstk5
+EXES=ibt1 ibt2 ibt3 ibt4 ibt5 shstk1 shstk2 shstk3 shstk4 shstk5 \
+     note-1-static note-1-dynamic
 
 ibt1-OBJS=bar.o ibt.o note1.o
 ibt2-OBJS=bar.o ibt.o note2.o
@@ -33,9 +34,13 @@ shstk3-LDFLAGS=$(LDFLAGS)
 shstk4-LDFLAGS=$(LDFLAGS)
 shstk5-LDFLAGS=$(LDFLAGS)
 
+note-1-OBJS=note-1.o
+
 ibt.o: CFLAGS +=-fcf-protection=branch
 
 all: note.t $(EXES)
+	./note-1-dynamic
+	./note-1-static
 	./ibt1
 	./shstk1
 	./ibt5
@@ -101,3 +106,9 @@ shstk4: $(shstk4-OBJS)
 
 shstk5: $(shstk5-OBJS)
 	$(build-dynamic)
+
+note-1-dynamic: $(note-1-OBJS)
+	$(build-dynamic)
+
+note-1-static: $(note-1-OBJS)
+	$(build-static)
