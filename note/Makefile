@@ -38,6 +38,8 @@ note-1-OBJS=note-1.o
 
 ibt.o: CFLAGS +=-fcf-protection=branch
 
+note-1.o: CFLAGS +=-fcf-protection
+
 all: note.t $(EXES)
 	./note-1-dynamic
 	./note-1-static
