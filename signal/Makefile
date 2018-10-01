@@ -6,7 +6,11 @@ include $(TOP-DIR)/cet.make
 
 CFLAGS=-g -fcf-protection
 
-EXES=sigreturn
+EXES=
+
+ifneq (x32,$(TARGET))
+EXES+=sigreturn
+endif
 
 sigreturn-OBJS=sigreturn.o
 
