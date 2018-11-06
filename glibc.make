@@ -64,13 +64,32 @@ $(GLIBC-BUILD-DIR)/libc.so.6 \
 $(LD-SO) $(GLIBC-BUILD-DIR)/libc_nonshared.a $(LIBGCC-EH-DYNAMIC) \
 `$(CC) --print-file-name=crtend.o` $(GLIBC-BUILD-DIR)/csu/crtn.o
 endef
+
+define build-shared-object
+$(CC) -Busr/local/bin/ -nostdlib -nostartfiles -o $@ \
+-shared -Wl,-z,nocombreloc \
+$(GLIBC-BUILD-DIR)/csu/crti.o \
+`$(CC) --print-file-name=crtbeginS.o` \
+-Wl,$(RPATH-LINK)=$(GLIBC-PATH)$(if $(findstring -lpthread,$($(@F)-LIBS)),$(LIBPTHREAD-GLIBC-PATH))$(if $(findstring -lm,$($(@F)-LIBS)),$(LIBM-GLIBC-PATH))$(if $(findstring -ldl,$($(@F)-LIBS)),$(LIBDL-GLIBC-PATH)) \
+$($(@F)-LDFLAGS) $^ \
+$(if $(findstring -ldl,$($(@F)-LIBS)),$(LIBDL-DYNAMIC)) \
+$(if $(findstring -lm,$($(@F)-LIBS)),$(LIBM-DYNAMIC)) \
+$(if $(findstring -lpthread,$($(@F)-LIBS)),$(LIBPTHREAD-DYNAMIC)) \
+$(GLIBC-BUILD-DIR)/libc.so.6 \
+$(LD-SO) $(GLIBC-BUILD-DIR)/libc_nonshared.a $(LIBGCC-EH-DYNAMIC) \
+`$(CC) --print-file-name=crtendS.o` $(GLIBC-BUILD-DIR)/csu/crtn.o
+endef
 else
 define build-static
 $(CC) -static $($(@F)-LDFLAGS) -o $@ $^ $($(@F)-LIBS)
 endef
 
 define build-dynamic
-$(CC) $($(@F)-LDFLAGS) -o $@ $^ $($(@F)-LIBS)
+$(CC) $($(@F)-LDFLAGS) -o $@ $^ $($(@F)-LIBS) -Wl,-R,.
+endef
+
+define build-shared-object
+$(CC) -shared $($(@F)-LDFLAGS) -o $@ $^ $($(@F)-LIBS)
 endef
 endif
 
