@@ -1,3 +1,5 @@
 *.o
+*.so
+cet.config
 config.make
 sde.config
