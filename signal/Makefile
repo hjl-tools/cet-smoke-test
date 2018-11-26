@@ -8,8 +8,11 @@ CFLAGS=-g -fcf-protection
 
 EXES=
 
+# Skip this on CET SDV since ia32 isn't available.
+ifeq (,$(shell egrep "model name.*i7-7700" /proc/cpuinfo))
 ifneq (x32,$(TARGET))
 EXES+=sigreturn
+endif
 endif
 
 sigreturn-OBJS=sigreturn.o
