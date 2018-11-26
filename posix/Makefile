@@ -2,6 +2,7 @@ TOP-DIR=..
 
 -include config.make
 
+include $(TOP-DIR)/sde.config
 include $(TOP-DIR)/cet.make
 
 CFLAGS=-g -O2 -fcf-protection
@@ -19,7 +20,8 @@ tst-cet-legacy-mod-1.o: CFLAGS=-g -O2 -fcf-protection=none
 all: $(EXES)
 	for f in $(EXES); do \
 	  status=; \
-	  readelf -n $$f | grep -q "IBT, SHSTK" && ./$$f && status=OK; \
+	  readelf -n $$f | grep -q "IBT, SHSTK" \
+	    && $(RUN) ./$$f && status=OK; \
 	  if [ x$$status != xOK ]; then \
 	    echo $$f: Failed; exit 1; \
 	  fi; \
