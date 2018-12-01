@@ -82,7 +82,7 @@ clean::
 ibt1: $(ibt1-OBJS)
 	$(build-dynamic)
 
-ibt2: $(ibt3-OBJS)
+ibt2: $(ibt2-OBJS)
 	$(build-dynamic)
 
 ibt3: $(ibt3-OBJS)
